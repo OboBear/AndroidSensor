@@ -8,6 +8,8 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,15 +17,21 @@ public class MainActivity extends AppCompatActivity {
 
     SensorManager sensorManager;
 
+    RoundImageSurfaceView roundImageSurfaceView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
-    }
+        //取消标题栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        setContentView(R.layout.activity_main);
+        roundImageSurfaceView = (RoundImageSurfaceView) findViewById(R.id.round_surfaceview);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+//        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+//        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
+    }
 
     SensorEventListener sensorEventListener = new SensorEventListener() {
 
@@ -31,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         public void onSensorChanged(SensorEvent sensorEvent) {
             if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
                 Log.i(TAG,"onSensorChanged");
-
                 //图解中已经解释三个值的含义
                 float X_lateral = sensorEvent.values[0];
                 float Y_longitudinal = sensorEvent.values[1];
@@ -47,6 +54,15 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG,"\n send heading "+X_lateral);
                 Log.i(TAG,"\n send pitch "+Y_longitudinal);
                 Log.i(TAG,"\n send roll "+Z_vertical);
+            } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                float X_lateral = sensorEvent.values[0];
+                float Y_longitudinal = sensorEvent.values[1];
+                float Z_vertical = sensorEvent.values[2];
+                Log.i(TAG,"scop X "+X_lateral);
+                Log.i(TAG,"scop Y "+Y_longitudinal);
+                Log.i(TAG,"scop Z "+Z_vertical);
+                Log.i(TAG, " ");
+                roundImageSurfaceView.setSensorValue(X_lateral, Y_longitudinal, Z_vertical);
             }
         }
 
