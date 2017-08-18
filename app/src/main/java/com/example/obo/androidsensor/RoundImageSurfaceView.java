@@ -84,14 +84,22 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
 
     }
-
+    float resultX = 0;
+    float resultY = 0;
     public void setSensorValue(float x, float y , float z) {
         if (mHolder != null) {
+            resultX += y * 130;
+            resultY += x * 50;
             mMatrix.postTranslate(y * 130, x * 50);
-
+            if (resultX > mScaledWidth) {
+                mMatrix.postTranslate(-mScaledWidth, 0);
+                resultX -= mScaledWidth;
+            } else if (resultX < - mScaledWidth) {
+                mMatrix.postTranslate(mScaledWidth, 0);
+                resultX += mScaledWidth;
+            }
 
             Canvas canvas = mHolder.lockCanvas();
-            canvas.drawColor(Color.BLACK);
             canvas.drawBitmap(mBitmapNew, mMatrix, mPaint);
             mHolder.unlockCanvasAndPost(canvas);
         }
