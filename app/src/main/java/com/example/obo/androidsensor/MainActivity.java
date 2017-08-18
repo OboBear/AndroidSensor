@@ -62,9 +62,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG,"scop Y "+Y_longitudinal);
                 Log.i(TAG,"scop Z "+Z_vertical);
                 Log.i(TAG, " ");
-                roundImageSurfaceView.setSensorValue(X_lateral, Y_longitudinal, Z_vertical);
+                if (++a == 5) {
+                    a = 0;
+                    roundImageSurfaceView.setSensorValue(X_lateral, Y_longitudinal, Z_vertical);
+                }
             }
         }
+
+        int a = 0;
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {

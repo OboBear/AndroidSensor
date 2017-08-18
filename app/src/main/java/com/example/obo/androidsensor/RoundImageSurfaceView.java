@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -29,10 +30,19 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
     Matrix mMatrix = new Matrix();
     Paint mPaint = new Paint();
 
+    Bitmap mBitmapNew;
+
     public RoundImageSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         getHolder().addCallback(this);
         mBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.round_image);
+
+        mBitmapNew = Bitmap.createBitmap(mBitmap.getWidth() * 3, mBitmap.getHeight(), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(mBitmapNew);
+        canvas.drawBitmap(mBitmap, 0,0, new Paint());
+        canvas.drawBitmap(mBitmap, mBitmap.getWidth(),0, new Paint());
+        canvas.drawBitmap(mBitmap, mBitmap.getWidth() * 2,0, new Paint());
+
         Log.i(TAG, "RoundImageSurfaceView init mBitmap.width = " + mBitmap.getWidth() + " mBitmap.height = " + mBitmap.getHeight());
     }
 
@@ -46,7 +56,11 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
             mScaledHeight = mViewHeight * 2;
             mScaledWidth = mBitmap.getWidth() * mScaledHeight/ mBitmap.getHeight();
             mMatrix.setScale(mScaleRate, mScaleRate, 0, 0);
-            mMatrix.postTranslate(0, - mScaledHeight / 4);
+            mMatrix.postTranslate(-mScaledWidth, - mScaledHeight / 4);
+
+            float[]floats = new float[9];
+            mMatrix.getValues(floats);
+            Log.i(TAG,"");
         }
         Log.i(TAG, "onLayout  mViewWidth = " + mViewWidth + "  mViewHeight = " + mViewHeight + " mScaledWidth = " + mScaledWidth + " mScaledHeight = " + mScaledHeight);
     }
@@ -73,9 +87,12 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
 
     public void setSensorValue(float x, float y , float z) {
         if (mHolder != null) {
-            mMatrix.postTranslate(x, y);
+            mMatrix.postTranslate(y * 130, x * 50);
+
+
             Canvas canvas = mHolder.lockCanvas();
-            canvas.drawBitmap(mBitmap, mMatrix, mPaint);
+            canvas.drawColor(Color.BLACK);
+            canvas.drawBitmap(mBitmapNew, mMatrix, mPaint);
             mHolder.unlockCanvasAndPost(canvas);
         }
     }
