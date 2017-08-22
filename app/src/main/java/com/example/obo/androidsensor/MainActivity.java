@@ -27,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         roundImageSurfaceView = (RoundImageSurfaceView) findViewById(R.id.round_surfaceview);
+        // 陀螺仪传感器，负责水平旋转
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 //        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 //        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
+        // 重力传感器，负责上下旋转
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
     }
 
@@ -37,17 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
-            if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){  //
                 Log.i(TAG,"onSensorChanged");
-                //图解中已经解释三个值的含义
                 float X_lateral = sensorEvent.values[0];
                 float Y_longitudinal = sensorEvent.values[1];
                 float Z_vertical = sensorEvent.values[2];
                 Log.i(TAG,"\n X "+X_lateral);
                 Log.i(TAG,"\n Y "+Y_longitudinal);
                 Log.i(TAG,"\n Z "+Z_vertical);
-            } else if (sensorEvent.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-//图解中已经解释三个值的含义
+            } else if (sensorEvent.sensor.getType() == Sensor.TYPE_ORIENTATION) { // compass
                 float X_lateral = sensorEvent.values[0];
                 float Y_longitudinal = sensorEvent.values[1];
                 float Z_vertical = sensorEvent.values[2];
