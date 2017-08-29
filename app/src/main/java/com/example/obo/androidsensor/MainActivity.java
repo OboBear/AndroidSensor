@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         roundImageSurfaceView = (RoundImageSurfaceView) findViewById(R.id.round_surfaceview);
         // 陀螺仪传感器，负责水平旋转
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-//        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 //        sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
         // 重力传感器，负责上下旋转
         sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG,"scop Y "+Y_longitudinal);
                 Log.i(TAG,"scop Z "+Z_vertical);
                 Log.i(TAG, " ");
-                if (++a == 5) {
-                    a = 0;
+//                if (++a == 5) {
+//                    a = 0;
                     roundImageSurfaceView.setSensorValue(X_lateral, Y_longitudinal, Z_vertical);
-                }
+//                }
             }
         }
 

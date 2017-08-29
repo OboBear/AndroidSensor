@@ -39,6 +39,7 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
 
         mBitmapNew = Bitmap.createBitmap(mBitmap.getWidth() * 3, mBitmap.getHeight(), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(mBitmapNew);
+        // 绘制三张连接的图片
         canvas.drawBitmap(mBitmap, 0,0, new Paint());
         canvas.drawBitmap(mBitmap, mBitmap.getWidth(),0, new Paint());
         canvas.drawBitmap(mBitmap, mBitmap.getWidth() * 2,0, new Paint());
@@ -52,14 +53,14 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
         if (changed) {
             mViewWidth = right - left;
             mViewHeight = bottom - top;
-            mScaleRate = mViewHeight * 1f/mBitmap.getHeight() * 2;
-            mScaledHeight = mViewHeight * 2;
-            mScaledWidth = mBitmap.getWidth() * mScaledHeight/ mBitmap.getHeight();
-            mMatrix.setScale(mScaleRate, mScaleRate, 0, 0);
-            mMatrix.postTranslate(-mScaledWidth, - mScaledHeight / 4);
 
-            float[]floats = new float[9];
-            mMatrix.getValues(floats);
+            mScaleRate = mViewHeight * 1f / mBitmap.getHeight() * 2;
+            mScaledHeight = mViewHeight * 2;
+            mScaledWidth = mBitmap.getWidth() * mScaledHeight / mBitmap.getHeight();
+            // 让界面显示的高度刚好为图片高度的一半
+            mMatrix.setScale(mScaleRate, mScaleRate, 0, 0);
+            // 视角移动到图片的正中间
+            mMatrix.postTranslate(- mScaledWidth, - mScaledHeight / 4);
             Log.i(TAG,"");
         }
         Log.i(TAG, "onLayout  mViewWidth = " + mViewWidth + "  mViewHeight = " + mViewHeight + " mScaledWidth = " + mScaledWidth + " mScaledHeight = " + mScaledHeight);
@@ -71,7 +72,7 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
 
         mHolder = surfaceHolder;
         Canvas canvas = mHolder.lockCanvas();
-        canvas.drawBitmap(mBitmap, mMatrix, mPaint);
+        canvas.drawBitmap(mBitmapNew, mMatrix, mPaint);
         mHolder.unlockCanvasAndPost(canvas);
     }
 
@@ -88,9 +89,9 @@ public class RoundImageSurfaceView extends SurfaceView implements SurfaceHolder.
     float resultY = 0;
     public void setSensorValue(float x, float y , float z) {
         if (mHolder != null) {
-            resultX += y * 130;
-            resultY += x * 50;
-            mMatrix.postTranslate(y * 130, x * 50);
+            resultX += y * 100;
+            resultY += x * 40;
+            mMatrix.postTranslate(y * 100, x * 40);
             if (resultX > mScaledWidth) {
                 mMatrix.postTranslate(-mScaledWidth, 0);
                 resultX -= mScaledWidth;
